@@ -13,6 +13,12 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
     apt-get update
     apt-get install -y unzip python build-essential autoconf libtool cmake git wget libicu55 libunwind8 clang-3.6
+
+    # libunwind make install uses latex2man, but it's > 300 MB of dependencies for something we don't use, so just
+    # stub it
+    echo '#!/bin/bash' | tee --append /usr/local/bin/latex2man
+    chmod +x /usr/local/bin/latex2man
+
     # If you want to compile for x64 Linux:
     # apt-get install -y clang-3.8 clang-3.6 clang-3.5 lldb-3.8 lldb-3.6-dev uuid-dev liblttng-ust-dev libunwind8-dev
   SHELL
@@ -48,7 +54,7 @@ Vagrant.configure("2") do |config|
 
     cd ~/git/coreclr
     ./build.sh
-    CONFIG_DIR=`realpath cross/android/arm64` ROOTFS_DIR=`realpath cross/android-rootfs/toolchain/arm64/sysroot` ./build.sh cross arm64 skipgenerateversion skipnuget
+    CONFIG_DIR=`realpath cross/android/arm64` ROOTFS_DIR=`realpath cross/android-rootfs/toolchain/arm64/sysroot` ./build.sh cross arm64 skipgenerateversion skipnuget cmakeargs -DENABLE_LLDBPLUGIN=0
 
     cd ~/git/corefx
     CONFIG_DIR=`realpath cross/android/arm64` ROOTFS_DIR=`realpath cross/android-rootfs/toolchain/arm64/sysroot` ./build-native.sh -debug -buildArch=arm64 -- verbose cross
