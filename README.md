@@ -18,7 +18,7 @@ Ubuntu Packages
 There are a couple of Ubuntu packages you need to compile .NET Core for Android, so let's get them first:
 
 ```
-apt-get install -y cmake lldb-3.8
+apt-get install -y unzip python build-essential autoconf libtool cmake git wget libicu55 libunwind8 clang-3.6
 ```
 
 Repository Layout
@@ -57,9 +57,9 @@ Cross-building coreclr and corefx
 
 ```
 cd ~/git/coreclr
-CONFIG_DIR=`realpath cross/android/arm64` ROOTFS_DIR=`realpath /home/fcarlier/git/coreclr/cross/android-rootfs/toolchain/arm64/sysroot` ./build.sh cross arm64 skipgenerateversion skipnuget
+CONFIG_DIR=`realpath cross/android/arm64` ROOTFS_DIR=`realpath cross/android-rootfs/toolchain/arm64/sysroot` ./build.sh cross arm64 skipgenerateversion skipnuget
 cd ~/git/corefx
-CONFIG_DIR=`realpath cross/android/arm64` ROOTFS_DIR=`realpath /home/fcarlier/git/corefx/cross/android-rootfs/toolchain/arm64/sysroot` ./build-native.sh -debug -buildArch=arm64 -- verbose cross
+CONFIG_DIR=`realpath cross/android/arm64` ROOTFS_DIR=`realpath cross/android-rootfs/toolchain/arm64/sysroot` ./build-native.sh -debug -buildArch=arm64 -- verbose cross
 ```
 
 Building Hello, World!
