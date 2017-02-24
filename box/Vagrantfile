@@ -1,0 +1,62 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.box = "boxcutter/ubuntu1604"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "4096"
+    vb.cpus = 4
+  end
+
+  config.vm.provision "shell", inline: <<-SHELL
+    apt-get update
+    apt-get install -y unzip python build-essential autoconf libtool cmake git wget libicu55 libunwind8 clang-3.6
+
+    # libunwind make install uses latex2man, but it's > 300 MB of dependencies for something we don't use, so just
+    # stub it
+    echo '#!/bin/bash' | tee --append /usr/local/bin/latex2man
+    chmod +x /usr/local/bin/latex2man
+
+    # If you want to compile for x64 Linux:
+    # apt-get install -y clang-3.8 clang-3.6 clang-3.5 lldb-3.8 lldb-3.6-dev uuid-dev liblttng-ust-dev libunwind8-dev
+  SHELL
+
+  config.vm.provision "shell", privileged: false, inline: <<-SHELL
+    mkdir -p ~/git
+    cd ~/git
+    git clone https://github.com/dotnet/coreclr
+    git clone https://github.com/dotnet/corefx
+    git clone https://github.com/qmfrederik/coredroid
+
+    # As a performance optimization, the NDK/lldb is downloaded to the /vagrant folder (which persists on the host, even if
+    # the Vagrant box is destroyed and re-created) and copied to the coreclr and corefx folders from there. Saves ~300MB in
+    # download when you recreate the box.
+    if [ ! -f /vagrant/android-ndk-r13b-linux-x86_64.zip ]; then
+      wget -nv -nc https://dl.google.com/android/repository/android-ndk-r13b-linux-x86_64.zip -O /vagrant/android-ndk-r13b-linux-x86_64.zip
+    fi
+
+    if [ ! -f /vagrant/lldb-2.3.3614996-linux-x86_64.zip ]; then
+      wget -nv -nc https://dl.google.com/android/repository/lldb-2.3.3614996-linux-x86_64.zip -O /vagrant/lldb-2.3.3614996-linux-x86_64.zip
+    fi
+
+    cd ~/git/coreclr
+    mkdir -p cross/android-rootfs/
+    unzip -q /vagrant/android-ndk-r13b-linux-x86_64.zip -d cross/android-rootfs/
+    unzip -q /vagrant/lldb-2.3.3614996-linux-x86_64.zip -d cross/android-rootfs/lldb/
+    cross/build-android-rootfs.sh
+
+    cd ~/git/corefx
+    mkdir -p cross/android-rootfs/
+    unzip -q /vagrant/android-ndk-r13b-linux-x86_64.zip -d cross/android-rootfs/
+    cross/build-android-rootfs.sh
+
+    cd ~/git/coreclr
+    ./build.sh
+    CONFIG_DIR=`realpath cross/android/arm64` ROOTFS_DIR=`realpath cross/android-rootfs/toolchain/arm64/sysroot` ./build.sh cross arm64 skipgenerateversion skipnuget cmakeargs -DENABLE_LLDBPLUGIN=0
+
+    cd ~/git/corefx
+    CONFIG_DIR=`realpath cross/android/arm64` ROOTFS_DIR=`realpath cross/android-rootfs/toolchain/arm64/sysroot` ./build-native.sh -debug -buildArch=arm64 -- verbose cross
+  SHELL
+end

@@ -1,4 +1,6 @@
 cli/
 bin/
 obj/
-
+.vagrant
+*.zip
+*.log
