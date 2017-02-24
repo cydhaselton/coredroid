@@ -190,6 +190,7 @@ Next, start the LLDB server on your device:
 
 ```
 adb shell
+cd /data/local/tmp/coredroid/
 /data/local/tmp/lldb-server platform --listen *:1234
 ```
 
@@ -202,7 +203,7 @@ adb forward tcp:1234 tcp:1234
 and then:
 
 ```
-lldb-3.8
+lldb-4.0
 (lldb) platform select remote-android
   Platform: remote-android
  Connected: no
