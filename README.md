@@ -117,6 +117,7 @@ So:
 ```
 cp ~/git/coreclr/cross/android-rootfs/android-ndk-r13b/sources/cxx-stl/gnu-libstdc++/4.9/libs/arm64-v8a/libgnustl_shared.so .
 cp ~/git/coreclr/cross/android-rootfs/toolchain/arm64/sysroot/usr/lib/libandroid-support.so .
+cp ~/git/coreclr/cross/android-rootfs/toolchain/arm64/sysroot/usr/lib/libandroid-glob.so .
 cp ~/git/coreclr/cross/android-rootfs/toolchain/arm64/sysroot/usr/lib/libuuid.so.1 .
 cp ~/git/coreclr/cross/android-rootfs/toolchain/arm64/sysroot/usr/lib/libuuid.so .
 cp ~/git/coreclr/cross/android-rootfs/toolchain/arm64/sysroot/usr/lib/libintl.so .
@@ -168,6 +169,21 @@ Then, push the LLDB server (the part that will run on Android) to your Android d
 
 ```
 adb push ~/git/coredroid/lldb/android/arm64-v8a/lldb-server /data/local/tmp/
+```
+
+On your Ubuntu box, install LLDB 4.0. First, add the following lines to your `/etc/apt/sources.list` file:
+
+```
+deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main
+deb-src http://apt.llvm.org/xenial/ llvm-toolchain-xenial-4.0 main
+```
+
+Then:
+
+```
+wget -O - http://apt.llvm.org/llvm-snapshot.gpg.key|sudo apt-key add -
+apt-get update
+apt-get install -y lldb-4.0
 ```
 
 Next, start the LLDB server on your device:
