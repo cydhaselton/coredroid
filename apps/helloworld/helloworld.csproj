@@ -5,11 +5,13 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <RuntimeIdentifier>ubuntu.16.04-x64</RuntimeIdentifier>
     <Platform>AnyCPU</Platform>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
   </PropertyGroup>
 
   <!-- Make sure to use Update, not Include! -->
   <ItemGroup>
     <PackageReference Update="Microsoft.NETCore.App" Version="2.0.0-beta-001607-00" />
+    <PackageReference Include="System.Console" Version="4.3.0" />
   </ItemGroup>
 </Project>
 
