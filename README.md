@@ -138,6 +138,7 @@ adb devices
 Then, run:
 
 ```
+adb shell rm -rf /data/local/tmp/coredroid
 adb shell mkdir -p /data/local/tmp/coredroid
 adb push . /data/local/tmp/coredroid/
 ```
