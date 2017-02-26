@@ -93,9 +93,11 @@ In this step, you need to:
 * Replace the copy of the .NET Core Runtime (coreclr) with the one you cross-built for Android
 * Replace the native libraries used by .NET Core with the ones you cross-built for Android
 * Remove any ngen'ed images
+* Copy the dependencies of .NET Core to the folder
 
 ```
 cd ~/git/coredroid
+rm -rf dist/helloworld
 mkdir -p dist/helloworld
 cd dist/helloworld
 cp ~/git/coredroid/apps/helloworld/bin/Debug/netcoreapp2.0/ubuntu.16.04-x64/publish/* .
@@ -107,14 +109,6 @@ cp ~/git/coreclr/bin/Product/Linux.arm64.Debug/*.so .
 cp ~/git/coreclr/bin/Product/Linux.arm64.Debug/*.dll .
 cp ~/git/coreclr/bin/Product/Linux.arm64.Debug/corerun .
 cp ~/git/corefx/bin/Linux.arm64.Debug/native/*.so .
-```
-
-And, finally, you also need to:
-* Copy the dependencies of .NET Core to the folder
-
-So:
-
-```
 cp ~/git/coreclr/cross/android-rootfs/android-ndk-r13b/sources/cxx-stl/gnu-libstdc++/4.9/libs/arm64-v8a/libgnustl_shared.so .
 cp ~/git/coreclr/cross/android-rootfs/toolchain/arm64/sysroot/usr/lib/libandroid-support.so .
 cp ~/git/coreclr/cross/android-rootfs/toolchain/arm64/sysroot/usr/lib/libandroid-glob.so .
