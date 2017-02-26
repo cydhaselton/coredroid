@@ -115,6 +115,7 @@ cp ~/git/coreclr/cross/android-rootfs/toolchain/arm64/sysroot/usr/lib/libandroid
 cp ~/git/coreclr/cross/android-rootfs/toolchain/arm64/sysroot/usr/lib/libuuid.so.1 .
 cp ~/git/coreclr/cross/android-rootfs/toolchain/arm64/sysroot/usr/lib/libuuid.so .
 cp ~/git/coreclr/cross/android-rootfs/toolchain/arm64/sysroot/usr/lib/libintl.so .
+cp ~/git/coreclr/cross/android-rootfs/toolchain/arm64/sysroot/usr/lib/libicu* .
 
 ```
 
