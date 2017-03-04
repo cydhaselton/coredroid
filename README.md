@@ -76,8 +76,21 @@ wget https://dotnetcli.blob.core.windows.net/dotnet/Sdk/master/dotnet-dev-ubuntu
 tar -xvzf dotnet-dev-ubuntu.16.04-x64.latest.tar.gz
 ```
 
+Next, build helloworld.dll for Ubuntu 16.04 
+
 ```
 cd ~/git/coredroid/apps/helloworld
+~/git/coredroid/cli/dotnet restore
+~/git/coredroid/cli/dotnet publish
+```
+
+Finally, build the helloworld.dll that will run on Android
+
+* Open the helloworld.csproj file and remove `ubuntu-16.04` from this line
+`<RuntimeIdentifier>ubuntu.16.04-x64</RuntimeIdentifier>`
+* Re-run the commands:
+
+```
 ~/git/coredroid/cli/dotnet restore
 ~/git/coredroid/cli/dotnet publish
 ```
@@ -94,6 +107,7 @@ In this step, you need to:
 * Replace the native libraries used by .NET Core with the ones you cross-built for Android
 * Remove any ngen'ed images
 * Copy the dependencies of .NET Core to the folder
+* Copy the Android helloworld.dll and other files to folder
 
 ```
 cd ~/git/coredroid
@@ -101,6 +115,7 @@ rm -rf dist/helloworld
 mkdir -p dist/helloworld
 cd dist/helloworld
 cp ~/git/coredroid/apps/helloworld/bin/Debug/netcoreapp2.0/ubuntu.16.04-x64/publish/* .
+cp ~/git/coredroid/apps/helloworld/bin/Debug/netcoreapp2.0/publish/* .
 rm *.ni.dll
 rm *.so
 rm mscorlib.dll
